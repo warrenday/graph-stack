@@ -1,0 +1,17 @@
+{
+  "name": "graph-stack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Warren Day",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^4.9.4",
+    "zod": "^3.19.1"
+  },
+  "scripts": {
+    "test": "vitest typecheck"
+  },
+  "devDependencies": {
+    "vitest": "^0.25.8"
+  }
+}
