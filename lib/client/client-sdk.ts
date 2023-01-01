@@ -1,14 +1,19 @@
-import { DeepBoolean, DeepPartial, DeepExpand, DeepRemoveArray } from "./types";
+import {
+  DeepBoolean,
+  DeepPartial,
+  DeepExpand,
+  DeepRemoveArray,
+} from "../types";
 
 interface IResolver {
   args: {};
   resolve: any;
 }
 
-type MinimalSchema = {
+export interface IMinimalSchema {
   Query: Record<string, IResolver>;
   Mutation: Record<string, IResolver>;
-};
+}
 
 /**
  * Take the values passed to fields and all possible
@@ -35,15 +40,12 @@ type BaseTypeResolvers<TBaseTypeSchema extends Record<string, IResolver>> = {
   >;
 };
 
-type ClientSdk<TSchema extends MinimalSchema> = {
+/**
+ * Given a server schema this type will generate a client SDK
+ * that can be used to execute queries and mutations against
+ * the server.
+ */
+export type IClientSdk<TSchema extends IMinimalSchema> = {
   query: BaseTypeResolvers<TSchema["Query"]>;
   mutation: BaseTypeResolvers<TSchema["Mutation"]>;
 };
-
-const createGraphStackClient = <
-  Schema extends MinimalSchema
->(): ClientSdk<Schema> => {
-  return {} as any;
-};
-
-export default createGraphStackClient;

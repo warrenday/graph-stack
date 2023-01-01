@@ -57,7 +57,9 @@ const schema = gs.resolvers({
   Mutation: {},
 });
 
-const client = createGraphStackClient<typeof schema>();
+const client = createGraphStackClient<typeof schema>({
+  url: "http://localhost:3000/graphql",
+});
 
 test("Returns the correct filtered return type for a circular graph", () => {
   const res = client.query.user({
