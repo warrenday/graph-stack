@@ -1,17 +1,13 @@
 import { test, assertType } from "vitest";
-import { createGraphStackServer, createType } from "../lib/server";
+import { createGraphStackServer } from "../lib/server";
 import { z } from "zod";
 
-const Address = createType({
-  typeDefs: z.object({ street: z.string(), postcode: z.number() }),
-});
+const Address = z.object({ street: z.string(), postcode: z.number() });
 
-const User = createType({
-  typeDefs: z.object({
-    firstName: z.string(),
-    age: z.number(),
-    address: Address,
-  }),
+const User = z.object({
+  firstName: z.string(),
+  age: z.number(),
+  address: Address,
 });
 
 const gs = createGraphStackServer({

@@ -3,13 +3,29 @@ import { test, assertType } from "vitest";
 import createGraphStackClient from "../lib/client";
 import { createGraphStackServer } from "../lib/server";
 
-const Address = z.object({ street: z.string(), postcode: z.number() });
+interface IAddress {
+  street: string;
+  postcode: number;
+  user: IUser;
+}
 
-const User = z.object({
-  firstName: z.string(),
-  age: z.number(),
-  address: Address,
-});
+interface IUser {
+  firstName: string;
+  age: number;
+  address: IAddress;
+}
+
+const Address: z.ZodType<IAddress> = z.lazy(() =>
+  z.object({ street: z.string(), postcode: z.number(), user: User })
+);
+
+const User: z.ZodType<IUser> = z.lazy(() =>
+  z.object({
+    firstName: z.string(),
+    age: z.number(),
+    address: Address,
+  })
+);
 
 const gs = createGraphStackServer({
   Address,
@@ -43,35 +59,18 @@ const schema = gs.resolvers({
 
 const client = createGraphStackClient<typeof schema>();
 
-test("Client Types", async () => {
-  assertType<
-    (input: {
-      args: { id: string };
-      fields: {
-        firstName?: boolean;
-        age?: boolean;
-        address?: {
-          street?: boolean;
-          postcode?: boolean;
-        };
-      };
-    }) => Promise<{
-      firstName?: string;
-      age?: number;
-      address?: {
-        street?: string;
-        postcode?: number;
-      };
-    }>
-  >(client.query.user);
-});
-
-test("Returns the correct filtered return type", () => {
+test("Returns the correct filtered return type for a circular graph", () => {
   const res = client.query.user({
     fields: {
       firstName: true,
       address: {
         street: true,
+        user: {
+          firstName: true,
+          address: {
+            postcode: true,
+          },
+        },
       },
     },
     args: {
@@ -84,6 +83,12 @@ test("Returns the correct filtered return type", () => {
       firstName: string;
       address: {
         street: string;
+        user: {
+          firstName: string;
+          address: {
+            postcode: number;
+          };
+        };
       };
     }>
   >(res);

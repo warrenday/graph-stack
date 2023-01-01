@@ -1,15 +1,11 @@
-import { z } from "zod";
+import { z, ZodLazy, ZodTypeAny } from "zod";
 import { DeepPartial } from "./types";
 
-type TypeDefs = z.ZodObject<z.ZodRawShape>;
+type TypeDefs = z.ZodType<any, z.ZodTypeDef, any>;
 
 interface ITypeInput {
   typeDefs: TypeDefs;
 }
-
-const createType = <T extends TypeDefs>(type: { typeDefs: T }) => {
-  return type["typeDefs"];
-};
 
 const createGraphStackServer = <
   TTypeDefs extends Record<string, ITypeInput["typeDefs"]>
@@ -46,4 +42,4 @@ const createGraphStackServer = <
   };
 };
 
-export { createType, createGraphStackServer };
+export { createGraphStackServer };

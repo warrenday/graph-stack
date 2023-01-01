@@ -1,17 +1,6 @@
 import { z } from "zod";
-import { createGraphStackServer, createType } from "../lib/server";
-
-const Address = createType({
-  typeDefs: z.object({ street: z.string(), postcode: z.number() }),
-});
-
-const User = createType({
-  typeDefs: z.object({
-    firstName: z.string(),
-    age: z.number(),
-    address: Address,
-  }),
-});
+import { createGraphStackServer } from "../lib/server";
+import { Address, User } from "./types";
 
 const gs = createGraphStackServer({
   Address,
