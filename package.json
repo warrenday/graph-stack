@@ -5,13 +5,18 @@
   "author": "Warren Day",
   "license": "MIT",
   "dependencies": {
+    "dedent": "^0.7.0",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
     "typescript": "^4.9.4",
     "zod": "^3.19.1"
   },
   "scripts": {
-    "test": "vitest typecheck"
+    "test": "vitest",
+    "test:types": "vitest typecheck"
   },
   "devDependencies": {
+    "@types/dedent": "^0.7.0",
     "ts-node": "^10.9.1",
     "vitest": "^0.25.8"
   }
