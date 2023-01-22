@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { test, assertType } from "vitest";
-import createGraphStackClient from "../lib/client";
+import createGraphStackClient from "../src/client";
 import { createGraphStackServer } from "../lib/server";
 
 interface IAddress {

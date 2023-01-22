@@ -1,6 +1,6 @@
 import dedent from "dedent";
 import { expect, test } from "vitest";
-import createRequest from "./create-request";
+import createRequest from "./create-request-payload";
 
 test("Creates a basic request", () => {
   const request = createRequest("query", "user", {

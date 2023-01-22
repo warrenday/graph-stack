@@ -1,12 +1,7 @@
-import {
-  DeepBoolean,
-  DeepPartial,
-  DeepExpand,
-  DeepRemoveArray,
-} from "../types";
+import { DeepBoolean, DeepPartial, DeepExpand, DeepRemoveArray } from "./types";
 
 interface IResolver {
-  args: {};
+  args?: {};
   resolve: any;
 }
 
@@ -20,23 +15,25 @@ export interface IMinimalSchema {
  * resolvable fields then reduce the selection set.
  */
 type ReduceResolvedFields<
-  TSelectedFields extends any,
-  TResolvableFields extends TSelectedFields
+  TResolvableFields extends TSelectedFields,
+  TSelectedFields extends DeepPartial<DeepRemoveArray<DeepBoolean<any>>>
 > = {
   [Key in keyof TSelectedFields]: TSelectedFields[Key] extends object
-    ? ReduceResolvedFields<TSelectedFields[Key], TResolvableFields[Key]>
+    ? ReduceResolvedFields<TResolvableFields[Key], TSelectedFields[Key]>
     : TResolvableFields[Key];
 };
 
 type BaseTypeResolvers<TBaseTypeSchema extends Record<string, IResolver>> = {
   [Key in keyof TBaseTypeSchema]: <
     TResolvableFields extends TBaseTypeSchema[Key]["resolve"],
-    TSelectedFields extends DeepPartial<DeepBoolean<TResolvableFields>>
+    TSelectedFields extends DeepPartial<
+      DeepRemoveArray<DeepBoolean<TResolvableFields>>
+    >
   >(input: {
-    fields: DeepExpand<DeepRemoveArray<TSelectedFields>>;
+    fields: DeepExpand<TSelectedFields>;
     args: TBaseTypeSchema[Key]["args"];
   }) => Promise<
-    DeepExpand<ReduceResolvedFields<TSelectedFields, TResolvableFields>>
+    DeepExpand<ReduceResolvedFields<TResolvableFields, TSelectedFields>>
   >;
 };
 

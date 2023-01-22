@@ -18,12 +18,14 @@ export type DeepPartial<T> = {
   [Key in keyof T]?: T[Key] extends object ? DeepPartial<T[Key]> : T[Key];
 };
 
-export type DeepBoolean<ResolvableFields> = {
-  [Key in keyof ResolvableFields]: ResolvableFields[Key] extends object
-    ? DeepBoolean<ResolvableFields[Key]>
-    : boolean;
+export type DeepBoolean<T> = {
+  [Key in keyof T]: T[Key] extends object ? DeepBoolean<T[Key]> : boolean;
 };
 
+export type RemoveArray<T> = T extends any[] ? T[0] : T;
+
 export type DeepRemoveArray<T> = {
-  [Key in keyof T]: T[Key] extends any[] ? DeepRemoveArray<T[Key][0]> : T[Key];
+  [Key in keyof T]: T[Key] extends object
+    ? RemoveArray<DeepRemoveArray<T[Key]>>
+    : RemoveArray<T[Key]>;
 };

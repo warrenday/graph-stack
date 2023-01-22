@@ -1,9 +1,14 @@
-import capitalize from "../utils/capitalize";
 import { IClientSdk, IMinimalSchema } from "./client-sdk";
-import createRequest, { IQueryInput, IBaseQueryType } from "./create-request";
+import createRequestPayload, {
+  IQueryInput,
+  IBaseQueryType,
+} from "./create-request-payload";
+import postRequest from "./post-request";
 
-interface IGraphStackClientConfig {
+export interface IGraphStackClientConfig {
   url: string;
+  headers?: Record<string, string>;
+  mappings: Record<string, Record<string, string>>;
 }
 
 const dynamicMethodCall = (
@@ -14,7 +19,7 @@ const dynamicMethodCall = (
     {
       get: (obj, prop: string) => {
         return (input: IQueryInput) => {
-          cb(prop, input);
+          return cb(prop, input);
         };
       },
     }
@@ -26,9 +31,13 @@ const requestHandler = (
   baseType: IBaseQueryType
 ) => {
   return dynamicMethodCall((queryName, input) => {
-    console.log({ queryName, input });
-
-    console.log(createRequest(baseType, queryName, input));
+    const queryPayload = createRequestPayload(
+      config.mappings,
+      baseType,
+      queryName,
+      input
+    );
+    return postRequest(config, queryPayload);
   });
 };
 

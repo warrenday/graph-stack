@@ -1,4 +1,4 @@
-import createGraphStackClient from "../lib/client";
+import createGraphStackClient from "../src/client";
 import type { Schema } from "./server";
 
 const client = createGraphStackClient<Schema>({
